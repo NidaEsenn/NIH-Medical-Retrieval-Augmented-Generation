@@ -1,0 +1,5 @@
+chunk_id,chunk_text,document_id,source_page_url
+doc_anemia_chunk_0,"Iron deficiency anemia can cause fatigue, weakness, dizziness, headaches, pale skin, and shortness of breath. Symptoms may be mild at first but can become more",doc_anemia,https://medlineplus.gov/anemia.html
+doc_anemia_chunk_1,"first but can become more noticeable over time. Clinical evaluation often considers symptom severity, possible blood loss, and diet history.",doc_anemia,https://medlineplus.gov/anemia.html
+doc_iron_chunk_0,"Low dietary iron intake and poor absorption can contribute to iron deficiency. A clinician may look for patterns in fatigue, weakness, concentration issues, and other",doc_iron,https://ods.od.nih.gov/factsheets/Iron-Consumer/
+doc_iron_chunk_1,"weakness, concentration issues, and other related symptoms while considering nutrition and underlying causes.",doc_iron,https://ods.od.nih.gov/factsheets/Iron-Consumer/

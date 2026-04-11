@@ -1,0 +1,4 @@
+chunk_id,chunk_text,document_id,source_page_url
+anemia_0,"Iron deficiency anemia can cause fatigue, weakness, dizziness, headaches, and pale skin.",doc_anemia,https://medlineplus.gov/anemia.html
+anemia_1,"A clinician may evaluate anemia symptoms together with diet, blood loss history, and lab findings.",doc_anemia,https://www.nhlbi.nih.gov/health/anemia
+iron_0,"Dietary iron intake and poor iron absorption can both contribute to iron deficiency.",doc_iron,https://ods.od.nih.gov/factsheets/Iron-Consumer/
