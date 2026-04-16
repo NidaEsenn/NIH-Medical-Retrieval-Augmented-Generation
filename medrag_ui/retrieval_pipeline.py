@@ -7,6 +7,7 @@ import pandas as pd
 import streamlit as st
 
 from medrag_chunking import ChunkingConfig, chunk_dataset
+from medrag_llm import OllamaConnectionError, generate_grounded_answer
 from medrag_retrieval import BM25Retriever, DenseRetriever, HybridRetriever
 
 
@@ -81,7 +82,7 @@ def _rows_to_citations(rows: pd.DataFrame) -> List[Dict[str, str]]:
     return citations
 
 
-def _build_answer(query: str, rows: pd.DataFrame, strategy: str) -> str:
+def _build_preview_answer(query: str, rows: pd.DataFrame, strategy: str) -> str:
     if rows.empty:
         return (
             f"No relevant chunks were retrieved for: '{query}'. "
@@ -92,8 +93,7 @@ def _build_answer(query: str, rows: pd.DataFrame, strategy: str) -> str:
     evidence = " ".join(snippets)
     return (
         f"Using {strategy.lower()} retrieval, the system found evidence suggesting: {evidence} "
-        "This is currently an extractive frontend preview; the final RAG version can pass these "
-        "citations into your local LLM for grounded answer generation."
+        "This is the retrieval preview used when a local LLM response is unavailable."
     )
 
 
@@ -108,7 +108,14 @@ def _build_metrics(rows: pd.DataFrame, strategy: str) -> Dict[str, str]:
     }
 
 
-def run_retrieval(query: str, strategy: str, top_k: int, candidate_k: int) -> Dict[str, Any]:
+def run_retrieval(
+    query: str,
+    strategy: str,
+    top_k: int,
+    candidate_k: int,
+    temperature: float,
+    model_name: str = "llama3",
+) -> Dict[str, Any]:
     chunks_path = _ensure_demo_chunks()
 
     if strategy == "Sparse (BM25)":
@@ -125,12 +132,26 @@ def run_retrieval(query: str, strategy: str, top_k: int, candidate_k: int) -> Di
 
     citations = _rows_to_citations(rows)
     avg_score = float(rows["score"].mean()) if not rows.empty else 0.0
+    llm_error = ""
+
+    try:
+        answer = generate_grounded_answer(
+            query=query,
+            citations=citations,
+            model_name=model_name,
+            temperature=temperature,
+        )
+    except OllamaConnectionError as exc:
+        llm_error = str(exc)
+        answer = _build_preview_answer(query, rows, strategy)
 
     return {
-        "answer": _build_answer(query, rows, strategy),
+        "answer": answer,
         "retrieval_strategy": strategy,
         "grounding_score": f"{avg_score:.3f}",
         "citations": citations,
         "metrics": _build_metrics(rows, strategy),
         "chunks_path": str(chunks_path),
+        "llm_model": model_name,
+        "llm_error": llm_error,
     }
