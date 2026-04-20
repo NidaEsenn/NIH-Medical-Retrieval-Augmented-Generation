@@ -4,5 +4,4 @@ __pycache__/
 artifacts/dense/
 medquad.csv
 medquad_preprocessed.csv
-artifacts/
 medrag_eval_bundle.zip
